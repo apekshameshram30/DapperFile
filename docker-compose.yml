@@ -1,0 +1,37 @@
+version: '3.9'
+ 
+networks:
+  mynetwork:
+ 
+services:
+ 
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      MSSQL_SA_PASSWORD: "Password@123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1434:1433"
+  
+  DapperService:
+    image: dapperexecute
+    build:
+      context: DapperExecution
+    ports:
+      - "5000:80"
+    depends_on:
+      - sqlserver
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=EmpServiceMicroDB;User Id=SA;Password=Password@123;Trusted_Connection=false;TrustServerCertificate=true;MultipleActiveResultSets=true;
+ 
+  # departmentservice:
+  #   image: departmentservice
+  #   build:
+  #     context: DepartmentService
+  #   ports:
+  #     - "5001:80"
+  #   depends_on:
+  #     - sqlserver
+  #   environment:
+  #     - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=DeptServiceMicroDB;User Id=SA;Password=SalilDeogade@@@123;Trusted_Connection=false;TrustServerCertificate=true;MultipleActiveResultSets=true;
+ 
